@@ -19,7 +19,7 @@ const carouselImages = [
 
 const serviceCardImages = {
   structural: "https://res.cloudinary.com/dyxijlh28/image/upload/v1772958799/Screenshot_2026-03-08_140138_nsjmqs.png",
-  connections: "https://res.cloudinary.com/dyxijlh28/image/upload/v1774372664/Screenshot_2026-03-24_224726_kmfmc7.png",
+  connections: "https://res.cloudinary.com/dyxijlh28/image/upload/v1774374723/Screenshot_2026-03-24_224030_omnkzf.png",
   misc: "https://res.cloudinary.com/dyxijlh28/image/upload/v1774015603/Screenshot_2026-03-20_193010_yj0a1n.png"
 };
 
