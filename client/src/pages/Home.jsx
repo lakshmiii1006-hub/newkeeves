@@ -68,6 +68,37 @@ export default function Home() {
     misc: { title: "PE Stamping", icon: ShieldCheck, description: "Licensed Professional Engineer (PE) stamping for drawings and calculations—ensuring safety, accuracy, and full compliance with local building codes." }
   };
 
+// Add this state inside your Home component
+const [showTitle, setShowTitle] = useState(true);
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setShowTitle((prev) => !prev);
+    // Only cycle the background image when the title is NOT showing
+    if (!showTitle) {
+      setActiveHeroImage((prev) => (prev + 1) % carouselImages.length);
+    }
+  }, 5000); // Switches every 5 seconds
+  return () => clearInterval(interval);
+}, [showTitle]);
+
+const [isBrandingMode, setIsBrandingMode] = useState(true);
+
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setIsBrandingMode((prev) => {
+      // If we are currently showing a snapshot (prev === false), 
+      // prepare the next snapshot for the next cycle
+      if (!prev) {
+        setActiveHeroImage((current) => (current + 1) % carouselImages.length);
+      }
+      return !prev; // Toggle the mode
+    });
+  }, 5000); // 5 seconds per view
+  return () => clearInterval(interval);
+}, []);
+
   return (
   <>
   <style jsx global>{`
@@ -77,69 +108,68 @@ export default function Home() {
   `}</style>
 
   <main className="min-h-screen bg-white">
-  {/* Hero Section */}
-<section className="relative min-h-[115vh] pt-56 pb-20 flex items-center justify-center overflow-hidden bg-white text-slate-900">
- {/* Background Carousel */}
-<div className="absolute inset-0 z-0 bg-white"> {/* Added bg-white for borders if image ratio differs */}
-  <AnimatePresence mode="wait">
-    <motion.img
-      key={activeHeroImage}
-      src={carouselImages[activeHeroImage]}
-      // CHANGED: object-contain ensures the full image is visible
-      // CHANGED: Added p-4 or p-10 if you want a "margin" around the image
-      className="w-full h-full object-contain absolute inset-0 p-6 md:p-12" 
-      initial={{ opacity: 0, scale: 0.95 }} // CHANGED: Start slightly smaller
-      animate={{ opacity: 1, scale: 1 }}    // CHANGED: Zoom into full size
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1.6 }}
-    />
-  </AnimatePresence>
-</div>
+  <section className="relative min-h-[115vh] flex items-center justify-center overflow-hidden bg-white text-slate-900" style={{ fontFamily: "'Trebuchet MS', Arial, sans-serif" }}>
+  
+  {/* PHASE 1: SINGLE SNAPSHOT (Only when NOT in Branding Mode) */}
+  <div className="absolute inset-0 z-0 bg-white">
+    <AnimatePresence mode="wait">
+      {!isBrandingMode && (
+        <motion.img
+          key={`snap-${activeHeroImage}`}
+          src={carouselImages[activeHeroImage]}
+          className="w-full h-full object-contain absolute inset-0 p-8 md:p-24"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        />
+      )}
+    </AnimatePresence>
+  </div>
 
-  {/* Content */}
-  <div className="relative z-40 text-center px-6 max-w-6xl w-full flex flex-col items-center">
-    
-    {/* TITLE IMAGE - Replaces h1 text */}
-    {/* I have scaled the image up to match the massive scale of the original h1 text */}
-    <motion.img
-      initial={{ opacity: 0, y: 60 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
-      src={titleImage}
-      alt="Keeves Steel"
-      
-      className="h-auto md:h-24 lg:h-32 xl:h-40 object-contain mb-16" 
-    />
+  {/* PHASE 2: TITLE & SENTENCE (Only when IN Branding Mode) */}
+  <div className="relative z-40 text-center px-6 max-w-6xl w-full flex flex-col items-center">
+    <AnimatePresence mode="wait">
+      {isBrandingMode && (
+        <motion.div
+          key="branding-content"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.8 }}
+          className="flex flex-col items-center"
+        >
+          {/* Your Title Image Asset */}
+          <img
+            src={titleImage}
+            alt="Keeves Steel"
+            className="h-auto md:h-24 lg:h-32 xl:h-40 object-contain mb-10"
+          />
+          
+          {/* Your "Reimagining" Sentence */}
+          <p className="text-xl md:text-2xl font-light text-slate-700 tracking-wide max-w-4xl">
+            Reimagining Steel Detailing with{" "}
+            <span className="text-sky-600 font-semibold">Next Level Innovation</span>{" "}
+            and Absolute Accuracy.
+          </p>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </div>
 
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3, duration: 1 }}
-      className="max-w-6xl mx-auto mb-12 text-center"
-    >
-      <p className="text-xl md:text-2xl font-light text-slate-700 tracking-wide whitespace-nowrap">
-        Reimagining Steel Detailing with{" "}
-        <span className="text-sky-600 font-semibold">
-          Next Level Innovation
-        </span>{" "}
-        and Absolute Accuracy.
-      </p>
-    </motion.div>
+  {/* FIXED CENTER-BOTTOM BUTTON */}
+  <div className="absolute bottom-20 left-0 right-0 z-50 flex justify-center">
+    <motion.button
+      onClick={() => navigate("/projects")}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="group flex items-center gap-3 px-12 py-6 bg-slate-900 text-white rounded-full font-bold uppercase tracking-widest text-lg shadow-2xl"
+    >
+      <span>View Work</span>
+      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+    </motion.button>
+  </div>
 
-    {/* Button */}
-    <motion.button
-      onClick={() => navigate("/projects")}
-      whileHover={{ scale: 1.06 }}
-      whileTap={{ scale: 0.95 }}
-      className="group relative px-12 py-6 bg-slate-900 border-2 border-slate-900 rounded-3xl font-bold uppercase tracking-widest text-xl text-white hover:bg-slate-800 transition-all duration-500 shadow-2xl"
-    >
-      <span className="relative z-10 flex items-center gap-3">
-        View Work
-        <ChevronRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-      </span>
-    </motion.button>
-
-  </div>
 </section>
 
 

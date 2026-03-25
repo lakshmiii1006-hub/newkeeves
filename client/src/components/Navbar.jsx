@@ -12,19 +12,17 @@ const Navbar = () => {
     { name: 'Projects', href: '/projects' },
   ];
 
-  // The specific text you requested
   const disclaimerText = "By contacting us, you consent to Keeves Steel using your details solely to respond to your inquiry, with your information securely transferred and processed in India in accordance with our Privacy Policy.";
   
-  // Encoded mailto link that includes the disclaimer in the body of the email
   const mailtoHref = `mailto:keeves@keevessteel.com?subject=Project%20Inquiry%20-%20Keeves%20Steel&body=${encodeURIComponent("\n\n---\n" + disclaimerText)}`;
 
   return (
     <header className="fixed top-0 w-full z-[999]">
 
-      {/* TOP UTILITY BAR */}
+      {/* TOP UTILITY BAR - Now stretched to match main nav */}
       <div className="hidden lg:block bg-slate-900 text-white/70 py-2 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center text-[10px] font-bold uppercase tracking-[0.15em]">
-
+        <div className="max-w-full mx-auto px-10 flex justify-between items-center text-[10px] font-bold uppercase tracking-[0.15em]">
+          
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-2">
               <ShieldCheck size={12} className="text-sky-400" />
@@ -38,35 +36,33 @@ const Navbar = () => {
           </div>
 
           <a
-  href={mailtoHref}
-  title={disclaimerText}
-  className="flex items-center gap-2 hover:text-white transition-colors normal-case"
->
-  <Mail size={12} className="text-sky-400" />
-  keeves@keevessteel.com
-</a>
-
+            href={mailtoHref}
+            title={disclaimerText}
+            className="flex items-center gap-2 hover:text-white transition-colors normal-case"
+          >
+            <Mail size={12} className="text-sky-400" />
+            keeves@keevessteel.com
+          </a>
         </div>
       </div>
 
       {/* MAIN NAVBAR */}
       <nav className="bg-white border-b border-slate-100 shadow-sm py-3">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
+        <div className="max-w-full mx-auto px-4 md:px-8 lg:px-10 flex justify-between items-center">
 
-          {/* LOGO */}
+          {/* LOGO - Corner Aligned */}
           <div className="flex items-center">
             <NavLink to="/" className="block">
               <img
                 src="https://res.cloudinary.com/dyxijlh28/image/upload/v1773410357/keevesteel_logo_big_ljqgbz.png"
                 alt="Keeves Steel"
-                className="h-15 lg:h-18 w-auto object-contain"
+                className="h-12 lg:h-16 w-auto object-contain transition-all"
               />
             </NavLink>
           </div>
 
-          {/* DESKTOP MENU */}
+          {/* DESKTOP MENU - Corner Aligned */}
           <div className="hidden lg:flex items-center gap-10">
-
             <div className="flex items-center gap-8 text-[13px] font-bold uppercase tracking-[0.2em]">
               {navLinks.map((link) => (
                 <NavLink
@@ -84,7 +80,10 @@ const Navbar = () => {
                     <>
                       {link.name}
                       {isActive && (
-                        <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-[#005bc4]"></span>
+                        <motion.span 
+                          layoutId="underline"
+                          className="absolute left-0 -bottom-1 w-full h-[2px] bg-[#005bc4]"
+                        />
                       )}
                     </>
                   )}
@@ -92,15 +91,13 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* CONTACT BUTTON WITH HOVER DISCLAIMER */}
             <a
               href={mailtoHref}
-              title={disclaimerText} // Tooltip for legal compliance
+              title={disclaimerText}
               className="px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 active:scale-95 bg-[#005bc4] text-white hover:bg-slate-900 shadow-lg shadow-blue-900/10"
             >
               Contact Us
             </a>
-
           </div>
 
           {/* MOBILE TOGGLE */}
@@ -110,7 +107,6 @@ const Navbar = () => {
           >
             {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
-
         </div>
 
         {/* MOBILE MENU */}
@@ -123,7 +119,6 @@ const Navbar = () => {
               className="lg:hidden bg-white border-b border-slate-100 overflow-hidden"
             >
               <div className="flex flex-col p-8 gap-6 items-center text-center">
-
                 <div className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-2">
                   Keeves Steel • Established 2021
                 </div>
@@ -135,9 +130,7 @@ const Navbar = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={({ isActive }) =>
                       `text-lg font-bold uppercase tracking-widest ${
-                        isActive
-                          ? "text-[#005bc4]"
-                          : "text-slate-800 hover:text-[#005bc4]"
+                        isActive ? "text-[#005bc4]" : "text-slate-800 hover:text-[#005bc4]"
                       }`
                     }
                   >
@@ -153,11 +146,9 @@ const Navbar = () => {
                   Contact Us
                 </a>
 
-                {/* MOBILE VISIBLE DISCLAIMER - BOLD VERSION */}
                 <p className="text-[10px] text-slate-600 font-bold leading-relaxed max-w-xs tracking-tight">
                   "{disclaimerText}"
                 </p>
-
               </div>
             </motion.div>
           )}
